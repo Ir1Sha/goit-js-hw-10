@@ -11,8 +11,10 @@ const hours = document.querySelector('.value[data-hours]');
 const minutes = document.querySelector('.value[data-minutes]');
 const seconds = document.querySelector('.value[data-seconds]');
 
+updateInterface({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+input.value = '';
 btn.disabled = true;
-let userSelectedDate;
+let userSelectedDate = null;
 let currentTimerId = null;
 
 const options = {
@@ -52,9 +54,12 @@ const options = {
     
         if (remainingTime <= 0) {
           clearInterval(currentTimerId);
+          currentTimerId = null;
+          userSelectedDate = null;
+          input.value = '';
+          updateInterface({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           input.disabled = false;
           btn.disabled = true;
-          updateInterface({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           return;
         }
     
