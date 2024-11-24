@@ -1,9 +1,8 @@
-import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-
-
-import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
+
+import flatpickr from "flatpickr";
+import iziToast from "izitoast";
 
 const input = document.querySelector('#datetime-picker');
 const btn = document.querySelector('button[data-start]');
@@ -12,7 +11,9 @@ const hours = document.querySelector('.value[data-hours]');
 const minutes = document.querySelector('.value[data-minutes]');
 const seconds = document.querySelector('.value[data-seconds]');
 
+btn.disabled = true;
 let userSelectedDate;
+let currentTimerId = null;
 
 const options = {
     enableTime: true,
@@ -38,17 +39,22 @@ const options = {
   flatpickr(input, options);
 
   btn.addEventListener("click", () => {
+    if(currentTimerId) {
+      clearInterval(currentTimerId);
+    }
+
     btn.disabled = true;
     input.disabled = true;
 
-    const timerId = setInterval(() => {
+    currentTimerId = setInterval(() => {
         const currentTime = Date.now();
         const remainingTime = userSelectedDate - currentTime;
     
         if (remainingTime <= 0) {
-          clearInterval(timerId);
+          clearInterval(currentTimerId);
           input.disabled = false;
           btn.disabled = true;
+          updateInterface({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           return;
         }
     
